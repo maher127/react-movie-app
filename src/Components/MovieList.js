@@ -1,9 +1,21 @@
 import React, { Component } from "react";
 import Movie from "./Movie";
+import { addMovie, editMovie } from "../Actions/MovieActions";
+import { connect } from "react-redux";
+import AddMovie from "./AddMovie";
 
-export default class MovieList extends Component {
+class MovieList extends Component {
+  state = {};
+  // componentDidMount() {
+  //   this.setState({
+  //     ...this.props.movies.filter(movie => movie.id === this.props.id)[0]
+  //   });
+  // }
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
   render() {
-    const { movies, toAddMovie = () => {} } = this.props;
+    const { movies } = this.props;
     return (
       <div>
         <div className="container">
@@ -15,21 +27,7 @@ export default class MovieList extends Component {
                 ))}
                 <div className="col-lg-3 col-md-4 col-sm-6">
                   <div className="d-flex flex-column justify-content-center align-items-center card add my-2">
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={() => {
-                        toAddMovie({
-                          name: prompt("New movie's name:"),
-                          description: prompt("New movie's description:"),
-                          rating: Number(prompt("New movie's rating:")),
-                          img: prompt("image URL:"),
-                          id: Math.random()
-                        });
-                      }}
-                    >
-                      Add movie
-                    </button>
+                    <AddMovie />
                   </div>
                 </div>
               </div>
@@ -40,3 +38,18 @@ export default class MovieList extends Component {
     );
   }
 }
+// const mapStateToProps = state => {
+//   return {
+//     movies: state.MoviesReducer
+//   };
+// };
+const mapDispatchToProps = dispatch => {
+  return {
+    ajout: newMovie => dispatch(addMovie(newMovie)),
+    edit: movieUpdate => dispatch(editMovie(movieUpdate))
+  };
+};
+export default connect(
+  null,
+  mapDispatchToProps
+)(MovieList);
